@@ -1,6 +1,8 @@
 # Twitter-Block-Bot
 ### Current functionality:
 A Python bot that opens a tweet and blocks the users that liked it.
+### How it works:
+The bot loads up the tweet in question, logs into your account, and then proceeds to block every account that liked this tweet. Useful for mass blocking bot accounts, or other cringe accounts.
 ### How to use:
 - Clone the repo and add a .env to the root. Put in it:
 ```
