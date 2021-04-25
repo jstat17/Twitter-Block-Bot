@@ -11,3 +11,6 @@ PASS=yourtwitterpassword
 - or run and configure `Notebook-Twitter Block Bot.ipynb` to your liking
 #### Note:
 Twitter only loads a couple of accounts at one time, so you can input a large number of accounts to block, but the bot will finish much before as Twitter delays loading more accounts by some minutes.
+### Python Modules Required:
+selenium, dotenv, time, os.
+selenium and dotenv will likely need to be installed with pip
