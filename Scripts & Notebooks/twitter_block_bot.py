@@ -82,7 +82,7 @@ def twitter_block_bot(tweet_link, num_accs):
         for _ in range(num_accs):
             accounts = driver.find_elements_by_css_selector("div[class='css-18t94o4 css-1dbjc4n r-1ny4l3l r-ymttw5 r-1f1sjgu r-o7ynqc r-6416eg']")
             block_account_action = ActionChains(driver)
-            block_account_action.move_to_element(accounts[0])
+            block_account_action.move_to_element_with_offset(accounts[0], 0, 20)
             block_account_action.click()
             block_account_action.perform()
             driver.implicitly_wait(2)
