@@ -72,7 +72,17 @@ def twitter_block_bot(tweet_link, num_accs):
     driver.implicitly_wait(5)
 
     # while on tweet
-    a_likes = find_element_safe(driver, 'XPATH', '//*[@id="react-root"]/div/div/div[2]/main/div/div/div/div/div/div[2]/div/section/div/div/div[1]/div/div/article/div/div/div/div[3]/div[4]/div/div[3]/div/a')
+    time.sleep(2.5)
+    a_likes = None
+    links = driver.find_elements_by_xpath('.//a') # get all anchor tags
+    for link in links:
+        # Find the anchor tag that goes to the list of accounts that liked
+        # the tweet in question:
+        if link.get_attribute('href').split("/")[-1].lower() == "likes":
+            a_likes = link
+            break
+
+    assert a_likes is not None
     a_likes.click()
     driver.implicitly_wait(2)
 
