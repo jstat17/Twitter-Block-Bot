@@ -11,6 +11,7 @@ PASS=yourtwitterpassword
 ```
 - Run either `twitter_block_bot.py` and insert the tweet URL (click on "Copy link to tweet" in the tweet menu), and the number of accounts to block,
 - or run and configure `Notebook-Twitter Block Bot.ipynb` to your liking
+- You will need the Chrome webdriver which you can pick up at https://sites.google.com/a/chromium.org/chromedriver/downloads and you will need to either set the PATH variable to where your own chromedriver.exe is, or alternatively place your webdriver in `C:\Program Files (x86)\chromedriver_win32\` as I have done.
 #### Note:
 Twitter only loads a couple of accounts at one time, so you can input a large number of accounts to block, but the bot will finish much before as Twitter delays loading more accounts by some minutes.
 ### Python modules required:
