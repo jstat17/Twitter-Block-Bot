@@ -90,6 +90,7 @@ def twitter_block_bot(tweet_link, num_accs):
 
     try:
         for _ in range(num_accs):
+            # get the accounts that show up on screen then click the first account
             accounts = driver.find_elements_by_css_selector("div[class='css-18t94o4 css-1dbjc4n r-1ny4l3l r-ymttw5 r-1f1sjgu r-o7ynqc r-6416eg']")
             block_account_action = ActionChains(driver)
             block_account_action.move_to_element_with_offset(accounts[0], 0, 20)
@@ -97,6 +98,7 @@ def twitter_block_bot(tweet_link, num_accs):
             block_account_action.perform()
             driver.implicitly_wait(2)
 
+            # click the triple dots for account options
             btn_dots = find_element_safe(driver, 'XPATH', '//*[@id="react-root"]/div/div/div[2]/main/div/div/div/div/div/div[2]/div/div/div[1]/div/div[1]/div/div[1]')
             block_account_action = ActionChains(driver)
             block_account_action.move_to_element(btn_dots)
@@ -105,18 +107,21 @@ def twitter_block_bot(tweet_link, num_accs):
             driver.implicitly_wait(2)
             time.sleep(0.5)
 
+            # click the block button
             btn_block = find_element_safe(driver, 'XPATH', '//*[@id="layers"]/div[2]/div/div/div/div[2]/div[3]/div/div/div/div[4]')
             block_account_action = ActionChains(driver)
             block_account_action.move_to_element(btn_block)
             block_account_action.click()
             block_account_action.perform()
 
+            # click to confirm block
             btn_block_confirm = find_element_safe(driver, 'XPATH', '//*[@id="layers"]/div[2]/div/div/div/div/div/div[2]/div[2]/div[3]/div[2]')
             block_account_action = ActionChains(driver)
             block_account_action.move_to_element(btn_block_confirm)
             block_account_action.click()
             block_account_action.perform()
 
+            # go back to accounts list page and refresh
             num_blocked += 1
             driver.back()
             time.sleep(0.5)
