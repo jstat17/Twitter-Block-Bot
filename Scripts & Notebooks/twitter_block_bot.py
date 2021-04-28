@@ -10,7 +10,49 @@ import dotenv
 
 
 class BlockBot(object):
+    '''
+    -----
+    BlockBot class that handles logging into the user's account,
+    loading tweets, and blocking the accounts that liked these
+    tweets in question.
+    -----
+        Attributes:
+            PATH (str): The path to the Chrome webdriver executable
+                        file.
+            num_accs (int): The maximum number of accounts to block
+                            in each processed tweet.
+            driver (WebDriver): The webdriver used in the object to
+                                interact with webpages.
+        -----
+        Methods:
+            __init__(PATH, num_accs): Initializes the BlockBot object
+            close(): Terminate the webdriver and the BlockBot object
+            login(): Login to the user's Twitter account
+            format_tweet(tweet): Formats a tweet for webdriver use
+            find_element_safe(element_type, element_attribute): Safely
+                    find a WebElement in case the webpage takes too
+                    long to load
+            return_home(): Go to Twitter homepage
+            block_users(tweets): Gets the list of tweets to block users
+                    within, and steps through each tweet to block them.
+            load_and_block_on_tweet(tweet, num_accs): Loads a tweet and
+                    blocks all the users that liked it
+    '''
+
     def __init__(self, PATH, num_accs):
+        '''
+        -----
+        Initialize the object of type BlockBot.
+        -----
+            Parameters:
+                PATH (str): The path to the Chrome webdriver
+                            executable file.
+                num_accs (int): The maximum number of accounts
+                                to block in each processed tweet.
+            -----
+            Returns:
+                None
+        '''
         dotenv.load_dotenv()
         self.PATH = PATH
         self.driver = webdriver.Chrome(PATH)
@@ -18,10 +60,31 @@ class BlockBot(object):
         self.login()
 
     def close(self):
+        '''
+        -----
+        Quits all operations of the webdriver. Used when the object
+        is not in use anymore.
+        -----
+            Parameters:
+                None
+            -----
+            Returns:
+                None
+        '''
         driver = self.driver
         driver.quit()
 
     def login(self):
+        '''
+        -----
+        The webdriver logs into the Twitter account.
+        -----
+            Parameters:
+                None
+            -----
+            Returns:
+                None
+        '''
         # load random tweet and login
         driver = self.driver
         tweet = self.format_tweet('https://twitter.com/Oreo/status/1365038991469281280?s=20')
@@ -52,9 +115,46 @@ class BlockBot(object):
         print(f"\nLogged into {user_name}{poss} account\n")
 
     def format_tweet(self, tweet):
+        '''
+        -----
+        When the button 'Click to share' on a tweet is clicked,
+        the link received has extra useless information at the
+        end of it which may cause bugs. So this method removes
+        this extra information.
+        -----
+            Parameters:
+                tweet (str): A tweet link either with or without
+                             the extra information. The method
+                             handles both types.
+            -----
+            Returns:
+                (str): The tweet without the extra information
+        '''
         return tweet.split("?")[0]
 
     def find_element_safe(self, element_type, element_attribute):
+        '''
+        -----
+        Sometimes an element must be found before the webpage
+        finishes loading. In those cases, this method allows
+        the element to be found not immediately. As in, there
+        is a delay so that the element can be found after the
+        webpage fully loads and the element now exists.
+        -----
+            Parameters:
+                element_type (str): The type of element that
+                                    selenium uses for finding
+                                    web elements -> 'XPATH',
+                                    'ID', 'CLASS_NAME' etc.
+                element_attribute (str): The attribute that the
+                                         webdriver must search for
+                                         -> 'div[class=...' etc.
+            -----
+            Returns:
+                element (WebElement): The desired element if it is
+                                      found within the time limit
+                element (None): If the element is not found in time
+        '''
         driver = self.driver
 
         if element_type == "CLASS_NAME":
@@ -86,7 +186,38 @@ class BlockBot(object):
         
         return element
 
+    def return_home(self):
+        '''
+        -----
+        Sometimes the account gets logged out on the current page,
+        but this can be fixed by just going back to the home screen.
+        This is all that this method does.
+        -----
+            Parameters:
+                None
+            -----
+            Returns:
+                None
+        '''
+        driver = self.driver
+        driver.get("https://twitter.com/home")
+        driver.implicitly_wait(5)
+        time.sleep(1)
+        driver.refresh()
+
     def block_users(self, tweets):
+        '''
+        -----
+        Uses the list of tweets to step through each of them and
+        block everyone that liked then. Shows detailed console
+        messages for different cases.
+        -----
+            Parameters:
+                tweets list(str): List of tweet links
+            -----
+            Returns:
+                None
+        '''
         total_blocked = 0
         for tweet in tweets:
             tweet = self.format_tweet(tweet)
@@ -110,6 +241,24 @@ class BlockBot(object):
         print(f"{total_blocked} {users_format} blocked in total for the {len(tweets)} tweets given.")
 
     def load_and_block_on_tweet(self, tweet, num_accs):
+        '''
+        -----
+        This is the method that uses the webdriver to click
+        buttons and block users.
+        -----
+            Parameters:
+                tweet (str): Link to the tweet
+                num_accs (int): Maximum number of accounts to block
+            -----
+            Returns:
+                num_blocked (int): Total number of accounts blocked
+            -----
+            Exceptions Raised:
+                AssertionError: If no one has liked the tweet. 
+                                Returns: 0
+                IndexError: If there are no more accounts loaded by
+                            Twitter. Returns: num_blocked (int)
+        '''
         driver = self.driver
         driver.get(tweet)
 
@@ -129,9 +278,11 @@ class BlockBot(object):
             assert a_likes is not None
         except AssertionError:
             print("No one has liked this tweet.")
-            driver.get("https://twitter.com/home")
-            driver.implicitly_wait(5)
-            driver.refresh()
+            self.return_home()
+            return 0
+        except:
+            print("Some strange error ocurred.")
+            self.return_home()
             return 0
 
         a_likes.click()
@@ -191,6 +342,8 @@ class BlockBot(object):
             print("Some uncaught error ocurred.")
 
         finally:
+            if num_blocked == 0:
+                self.return_home()
             return num_blocked
 
 
