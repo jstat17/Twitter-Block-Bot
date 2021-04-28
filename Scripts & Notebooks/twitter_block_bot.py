@@ -17,6 +17,10 @@ class BlockBot(object):
         self.num_accs = num_accs
         self.login()
 
+    def close(self):
+        driver = self.driver
+        driver.quit()
+
     def login(self):
         # load random tweet and login
         driver = self.driver
@@ -39,7 +43,13 @@ class BlockBot(object):
         mouse_move_login_btn.perform()
 
         driver.implicitly_wait(5)
-        print(f"Logged into {os.environ['USER_NAME']}'s account")
+
+        # format apostrophe of possession for the account name
+        user_name = os.environ['USER_NAME']
+        poss = "'"
+        if user_name[-1].lower() != 's':
+            poss += 's'
+        print(f"\nLogged into {user_name}{poss} account\n")
 
     def format_tweet(self, tweet):
         return tweet.split("?")[0]
@@ -85,13 +95,19 @@ class BlockBot(object):
                 print(f"No accounts could be blocked on tweet: {tweet}\n")
             else:
                 accs_format = "account"
+                verb = "was"
                 if blocking != 1:
                     accs_format += "s"
+                    verb = "were"
                     
-                print(f"{blocking} {accs_format} were blocked on tweet: {tweet}\n")
+                print(f"{blocking} {accs_format} {verb} blocked on tweet: {tweet}\n")
                 total_blocked += blocking
         
-        print(f"{total_blocked} users were blocked in total for the {len(tweets)} tweets given.")
+        users_format = "user was"
+        if total_blocked != 1:
+            users_format = "users were"
+
+        print(f"{total_blocked} {users_format} blocked in total for the {len(tweets)} tweets given.")
 
     def load_and_block_on_tweet(self, tweet, num_accs):
         driver = self.driver
@@ -107,8 +123,14 @@ class BlockBot(object):
             if link.get_attribute('href').split("/")[-1].lower() == "likes":
                 a_likes = link
                 break
+        
+        # make sure there is a link to likes (at least one user has liked the tweet)
+        try:
+            assert a_likes is not None
+        except AssertionError:
+            print("No one has liked this tweet.")
+            return 0
 
-        assert a_likes is not None
         a_likes.click()
         driver.implicitly_wait(2)
 
@@ -185,3 +207,4 @@ if __name__ == "__main__":
 
     block_bot = BlockBot(PATH, num_accs)
     block_bot.block_users(tweet_links)
+    block_bot.close()
