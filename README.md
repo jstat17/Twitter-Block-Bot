@@ -1,4 +1,4 @@
-# Twitter-Block-Bot
+# Twitter Block Bot
 ## Purpose
 Traditional celebrities, e-celebs and neo-lib corporations virtue signal on Twitter quite often, so this bot is a solution to all the morons that fall for this garbagee (those users that hit like on said virtue-signalling tweets) or for the automated bots that inflate like counts.
 ## Current functionality:
