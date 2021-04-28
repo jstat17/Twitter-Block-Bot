@@ -12,7 +12,7 @@ USER_NAME=yourtwitterusername
 PASS=yourtwitterpassword
 ```
 - Your Twitter account must have 2-factor authentication turned off.
-- Locate `tweets.txt` which is either in the same folder as `twitter_block_bot.py` or in the sub-folder `Scripts & Notebooks` as both will work.
+- Locate `tweets.txt` which is either in the root directory or in the sub-folder `Scripts & Notebooks` as both will work.
 - Insert into this file each tweet you want (for blocking each user that liked it) on a new line. You can get the tweet link by clicking on "Copy link to tweet."
 - You can select that number of accounts to block in each tweet in the variable `num_accs`, but note that Twitter only loads a couple of tweets at a time, so by default this is set to 1000, which will block as many accounts that get loaded.
 - Or run and configure `Notebook-Twitter Block Bot.ipynb` to your liking.
