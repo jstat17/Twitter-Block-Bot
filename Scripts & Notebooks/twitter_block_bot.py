@@ -129,6 +129,9 @@ class BlockBot(object):
             assert a_likes is not None
         except AssertionError:
             print("No one has liked this tweet.")
+            driver.get("https://twitter.com/home")
+            driver.implicitly_wait(5)
+            driver.refresh()
             return 0
 
         a_likes.click()
@@ -201,7 +204,8 @@ if __name__ == "__main__":
 
     with open(text_path, "r") as f:
         for line in f:
-            tweet_links.append(line[:-1])
+            if line[:-1] != "":
+                tweet_links.append(line[:-1])
     # print(tweet_links)
     num_accs = 1000
 
