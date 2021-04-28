@@ -14,7 +14,7 @@ PASS=yourtwitterpassword
 - Your Twitter account must have 2-factor authentication turned off.
 - Locate `tweets.txt` which is either in the root directory or in the sub-folder `Scripts & Notebooks` as both will work.
 - Insert into this file each tweet you want (for blocking each user that liked it) on a new line. You can get the tweet link by clicking on "Copy link to tweet."
-- You can select that number of accounts to block in each tweet in the variable `num_accs`, but note that Twitter only loads a couple of tweets at a time, so by default this is set to 1000, which will block as many accounts that get loaded.
+- You can select the number of accounts to block in each tweet in the variable `num_accs`, but note that Twitter only loads a couple of tweets at a time, so by default this is set to 1000, which will block as many accounts that get loaded.
 - Or run and configure `Notebook-Twitter Block Bot.ipynb` to your liking.
 - You will need the Chrome webdriver which you can pick up at https://sites.google.com/a/chromium.org/chromedriver/downloads and you will need to either set the PATH variable to where your own chromedriver.exe is, or alternatively place your webdriver in `C:\Program Files (x86)\chromedriver_win32\` as I have done.
 ### Note:
@@ -23,5 +23,4 @@ PASS=yourtwitterpassword
 ### Python modules required:
 selenium, dotenv, time, os.
 
-selenium and dotenv will likely need to be installed with pip
-time and os are in the standard library (I think)
+selenium and dotenv will likely need to be installed with pip. time and os are in the standard library (I think).
