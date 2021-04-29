@@ -7,6 +7,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 import time
 import os
 import dotenv
+import sys
 
 
 class BlockBot(object):
@@ -21,6 +22,8 @@ class BlockBot(object):
                         file.
             num_accs (int): The maximum number of accounts to block
                             in each processed tweet.
+            blocked_accounts (int): The total number of accounts that
+                                    the bot has blocked.
             driver (WebDriver): The webdriver used in the object to
                                 interact with webpages.
         -----
@@ -57,6 +60,7 @@ class BlockBot(object):
         self.PATH = PATH
         self.driver = webdriver.Chrome(PATH)
         self.num_accs = num_accs
+        self.blocked_accounts = 0
         self.login()
 
     def close(self):
@@ -113,6 +117,33 @@ class BlockBot(object):
         if user_name[-1].lower() != 's':
             poss += 's'
         print(f"\nLogged into {user_name}{poss} account\n")
+
+    def sleep_prevent_ratelimit(self, num_blocked, limit, seconds):
+        '''
+        -----
+        A method to prevent rate-limiting by Twitter. It triggers
+        a sleep if the number of blocked accounts has reached the
+        limit, so this method can be called on each iteration of
+        a loop.
+        -----
+            Parameters:
+                num_blocked (int): The number of accounts currently
+                                   blocked.
+                limit (int): The number of accounts blocked that
+                             will trigger a sleep.
+                seconds (int): The number of seconds to sleep
+            -----
+            Returns:
+                None
+        '''
+        if num_blocked % limit == 0:
+            print(f"Sleeping for {seconds} seconds to prevent being rate-limited...")
+            for sec in range(seconds):
+                print(str(sec), end="..")
+                sys.stdout.flush()
+                time.sleep(1)
+            
+            print("")
 
     def format_tweet(self, tweet):
         '''
@@ -233,6 +264,16 @@ class BlockBot(object):
                     
                 print(f"{blocking} {accs_format} {verb} blocked on tweet: {tweet}\n")
                 total_blocked += blocking
+                self.blocked_accounts += blocking
+
+                # sleep to prevent being rate-limited
+                if blocking > 70:
+                    self.sleep_prevent_ratelimit(1, 1, 60)
+                elif blocking > 40:
+                    self.sleep_prevent_ratelimit(1, 1, round(blocking - 10))
+
+                if total_blocked > 150 and blocking > 15:
+                    self.sleep_prevent_ratelimit(1, 1, round(60 + total_blocked/4))
         
         users_format = "user was"
         if total_blocked != 1:
@@ -334,6 +375,15 @@ class BlockBot(object):
                 if num_blocked != 1:
                     out += "s"
                 print("Blocked ", num_blocked, out)
+
+                # sleep 60 secs to prevent being rate-limited
+                sleep_secs = 60
+                if num_blocked > 100:
+                    sleep_secs += 60
+                if num_blocked > 150:
+                    sleep_secs += round(num_blocked/2)
+
+                self.sleep_prevent_ratelimit(num_blocked, 25, sleep_secs)
         
         except IndexError:
             print("No more accounts loaded by Twitter for this tweet. Wait some time and try again.")
@@ -357,11 +407,14 @@ if __name__ == "__main__":
 
     with open(text_path, "r") as f:
         for line in f:
-            if line[:-1] != "":
+            if line[:-1] != "" and line.replace(" ", "").replace("\t", "")[0] != "#":
                 tweet_links.append(line[:-1])
     # print(tweet_links)
     num_accs = 1000
 
+    tic = time.perf_counter()
     block_bot = BlockBot(PATH, num_accs)
     block_bot.block_users(tweet_links)
     block_bot.close()
+    toc = time.perf_counter()
+    print(f"\n\nTime taken to block {block_bot.blocked_accounts} accounts was {int((toc-tic)//60)} min {(toc-tic) - (toc-tic)//60*60:0.4f} s, with a rate of {block_bot.blocked_accounts/(toc-tic):0.4f} blocks/s")

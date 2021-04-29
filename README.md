@@ -21,6 +21,6 @@ PASS=yourtwitterpassword
 - Twitter only loads a couple of accounts at one time. So you can input a large number of accounts to block, but the bot will finish long before this limit is reached as Twitter delays loading more accounts by some minutes.
 - You may get rate-limited by Twitter for multiple API calls in a row. You just need to wait some minutes for it to reset, then you can continue blocking.
 ### Python modules required:
-selenium, dotenv, time, os.
+selenium, dotenv, time, os, sys.
 
-selenium and dotenv will likely need to be installed with pip. time and os are in the standard library (I think).
+selenium and dotenv will likely need to be installed with pip. time, os and sys are in the standard library.
