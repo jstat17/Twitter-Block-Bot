@@ -31,6 +31,8 @@ class BlockBot(object):
             __init__(PATH, num_accs): Initializes the BlockBot object
             close(): Terminate the webdriver and the BlockBot object
             login(): Login to the user's Twitter account
+            sleep_prevent_ratelimit(): Sleep to prevent being rate-
+                     limited by Twitter
             format_tweet(tweet): Formats a tweet for webdriver use
             find_element_safe(element_type, element_attribute): Safely
                     find a WebElement in case the webpage takes too
@@ -417,4 +419,4 @@ if __name__ == "__main__":
     block_bot.block_users(tweet_links)
     block_bot.close()
     toc = time.perf_counter()
-    print(f"\n\nTime taken to block {block_bot.blocked_accounts} accounts was {int((toc-tic)//60)} min {(toc-tic) - (toc-tic)//60*60:0.4f} s, with a rate of {block_bot.blocked_accounts/(toc-tic):0.4f} blocks/s")
+    print(f"\n\nTime taken to block {block_bot.blocked_accounts} accounts was {int((toc-tic)//60)} min {round((toc-tic) - (toc-tic)//60*60, 2):0.2f} s, with a rate of {block_bot.blocked_accounts/(toc-tic):0.5f} blocks/s")

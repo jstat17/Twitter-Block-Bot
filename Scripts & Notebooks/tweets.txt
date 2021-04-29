@@ -1,5 +1,6 @@
 # Enter tweets line-by-line, and make comments by placing a '#'
 # at the beginning of a line; similar to a normal Python comment.
-https://twitter.com/elijahdaniel/status/1359254174282600449?s=20
-https://twitter.com/asapskrr/status/1358089411955732481?s=20
-https://twitter.com/slumptmila/status/1357757529325899778?s=20
+https://twitter.com/therealfstl1992/status/1387453573290766349?s=20
+https://twitter.com/POTUS/status/1387584072021692420?s=20
+https://twitter.com/PreetBharara/status/1387474004810809352?s=20
+https://twitter.com/hugolowell/status/1387521459413831688?s=20
