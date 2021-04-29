@@ -1,6 +1,10 @@
 # Twitter Block Bot
 ## Purpose
 Traditional celebrities, e-celebs and neo-lib corporations virtue signal on Twitter quite often, so this bot is a solution to all the morons that fall for this garbagee (those users that hit like on said virtue-signalling tweets) or for the automated bots that inflate like counts.
+## RISKS INVOLVED:
+After using this bot to block maybe over a thousand or two accounts, my Twitter account was locked for automated behaviour. Automated spam behaviour like mass-liking or retweeting will get your account locked as they are against Twitter's rules. My account got locked because the blocking behaviour seemed to be spam automation. After submitting notice to Twitter that my account was potentially hacked and used in a botnet (lmao) they unlocked it. So you use this software at your own risk. 
+
+Not much more work will be done on this project unless I figure out how to use Twitter's API to perform mass-blocking.
 ## Current functionality:
 A Python bot that opens a list of tweets and blocks the users that liked them.
 ### How it works:
